@@ -11,8 +11,6 @@
 - [Demo Video](#demo-video)
 <!--toc:end-->
 
-Intro to AI assignment 3
-
 ## Overview of Problem
 
 Customer churn is a major problem and one of the most important concerns for
@@ -51,4 +49,4 @@ predicting customers who are most likely subject to churn.
 
 ## Demo Video
 
-YouTube link:
+- YouTube link:
