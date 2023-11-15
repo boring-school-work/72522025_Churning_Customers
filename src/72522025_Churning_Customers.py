@@ -16,7 +16,6 @@ from tensorflow.keras.models import Model
 from scikeras.wrappers import KerasClassifier
 
 # %%
-!python --version
 
 # %% [markdown]
 # ## Load The Data
