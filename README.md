@@ -53,8 +53,8 @@ predicting customers who are most likely subject to churn.
 - [x] Data preprocessing
 - [x] Feature Extraction
 - [x] Exploratory Data Analysis
-- [ ] Model training (MLP using functional API)
-- [ ] Model Evaluation
+- [x] Model training (MLP using functional API)
+- [x] Model Evaluation
 - [ ] Deployment
 
 ## Directory Structure
