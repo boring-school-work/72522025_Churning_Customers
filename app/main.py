@@ -1,6 +1,7 @@
 import streamlit as st
 import joblib
 from tensorflow.keras.models import load_model
+import numpy as np
 
 st.title("Customer Churn Prediction")
 st.write("by: [David Saah](https://github.com/davesaah)")
@@ -17,7 +18,23 @@ scaler = joblib.load("../models/scaler.pkl")
 encoder = joblib.load("../models/encoder.pkl")
 
 def predict():
-    pass
+    # scale numeric values and encode the categorical ones
+    num_features = np.array([tenure, monthly_charges, total_charges]).reshape(1, -1)
+    num_features_scaled = scaler.transform(num_features)
+
+    cat_features = np.array([contract, internet_service, payment_method]).reshape(1, -1)
+    cat_features_encoded = encoder.transform(cat_features)
+
+    # merge the numerical and categorical features
+    features = np.concatenate((num_features_scaled, cat_features_encoded.toarray()), axis=1)
+
+    # make prediction
+    prediction = model.predict(features)
+
+    if prediction[0] >= 0.5:
+        st.error("This customer is likely to churn")
+    else:
+        st.success("This customer is likely to stay")
 
 # get user input
 tenure = st.number_input(
@@ -40,7 +57,7 @@ contract = st.selectbox(
     options=[
         "Month-to-month",
         "One year",
-        "Two years"
+        "Two year"
     ],
 )
 
