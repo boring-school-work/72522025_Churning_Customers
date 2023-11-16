@@ -2,10 +2,6 @@ import streamlit as st
 import joblib
 from tensorflow.keras.models import load_model
 import numpy as np
-import os
-
-# display pwd
-st.write(os.getcwd())
 
 st.title("Customer Churn Prediction")
 st.write("by: [David Saah](https://github.com/davesaah)")
@@ -17,9 +13,9 @@ col3.metric("AUC Score", "0.86", "0.5")
 st.subheader("", divider="rainbow")
 
 # load models
-model = load_model("/app/72522025_churning_customers/app/churn_model.h5")
-scaler = joblib.load("/app/72522025_churning_customers/app/scaler.pkl")
-encoder = joblib.load("/app/72522025_churning_customers/app/encoder.pkl")
+model = load_model("/app/72522025_churning_customers/models/churn_model.h5")
+scaler = joblib.load("/app/72522025_churning_customers/models/scaler.pkl")
+encoder = joblib.load("/app/72522025_churning_customers/models/encoder.pkl")
 
 def predict():
     # scale numeric values and encode the categorical ones
