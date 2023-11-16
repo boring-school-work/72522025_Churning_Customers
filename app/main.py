@@ -13,9 +13,9 @@ col3.metric("AUC Score", "0.86", "0.5")
 st.subheader("", divider="rainbow")
 
 # load models
-model = load_model("./churn_model.h5")
-scaler = joblib.load("./scaler.pkl")
-encoder = joblib.load("./encoder.pkl")
+model = load_model("churn_model.h5")
+scaler = joblib.load("scaler.pkl")
+encoder = joblib.load("encoder.pkl")
 
 def predict():
     # scale numeric values and encode the categorical ones
