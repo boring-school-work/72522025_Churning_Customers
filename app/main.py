@@ -13,13 +13,15 @@ col2.metric("Accuracy", "0.81")
 col3.metric("AUC Score", "0.86", "0.5")
 st.subheader("", divider="rainbow")
 
+
+# display pwd
+print(os.getcwd())
+
+
 # load models
 model = load_model("/app/churn_model.h5")
 scaler = joblib.load("/app/scaler.pkl")
 encoder = joblib.load("/app/encoder.pkl")
-
-# display pwd
-print(os.getcwd())
 
 def predict():
     # scale numeric values and encode the categorical ones
