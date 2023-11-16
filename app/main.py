@@ -4,6 +4,9 @@ from tensorflow.keras.models import load_model
 import numpy as np
 import os
 
+# display pwd
+st.write(os.getcwd())
+
 st.title("Customer Churn Prediction")
 st.write("by: [David Saah](https://github.com/davesaah)")
 
@@ -12,11 +15,6 @@ col1, col2, col3, col4 = st.columns(spec=[.5, .5, .5, .15])
 col2.metric("Accuracy", "0.81")
 col3.metric("AUC Score", "0.86", "0.5")
 st.subheader("", divider="rainbow")
-
-
-# display pwd
-print(os.getcwd())
-
 
 # load models
 model = load_model("/app/churn_model.h5")
