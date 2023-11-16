@@ -10,12 +10,11 @@ from sklearn.model_selection import train_test_split, GridSearchCV
 import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score, roc_auc_score
 import seaborn as sns
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from tensorflow.keras.layers import Input, Dense, Dropout
 from tensorflow.keras.models import Model
 from scikeras.wrappers import KerasClassifier
-
-# %%
+import joblib
 
 # %% [markdown]
 # ## Load The Data
@@ -101,12 +100,24 @@ data["Contract"].value_counts()
 # ## Feature Importance and Selection
 
 # %%
-# encode categorical columns
-data_encoded = pd.get_dummies(data, columns=cat_cols)
+encoder = OneHotEncoder()
+encode_data = encoder.fit(data[cat_cols])
+encoded_data = encode_data.transform(data[cat_cols]).toarray()
+
+# %%
+nnn = encoder.get_feature_names_out(cat_cols).tolist()
+encoded_df = pd.DataFrame(data=encoded_data, columns=nnn)
+encoded_df
+
+# %%
+data_encoded = pd.concat([data[num_cols], encoded_df], axis=1)
 
 # %%
 for col in data_encoded.columns:
     print(col)
+
+# %%
+data_encoded["Churn"] = pd.get_dummies(data["Churn"], drop_first=True)
 
 # %%
 y = data_encoded["Churn"]
@@ -300,9 +311,6 @@ data_encoded[xcols].shape
 data_encoded["Churn"].head()
 
 # %%
-data_encoded["Churn"] = pd.get_dummies(data_encoded["Churn"], drop_first=True)
-
-# %%
 # split the data into train, validation and test
 X_train, X_test, y_train, y_test = train_test_split(data_encoded[xcols], data_encoded["Churn"], test_size=0.2, random_state=42)
 
@@ -330,9 +338,6 @@ X_test[num_cols] = scaler.transform(X_test[num_cols])
 X_train = X_train.astype('float32')
 X_val = X_val.astype('float32')
 X_test = X_test.astype('float32')
-y_train = y_train.astype('float32')
-y_val = y_val.astype('float32')
-y_test = y_test.astype('float32')
 
 # %%
 X_train.shape
@@ -558,10 +563,13 @@ plt.legend()
 y_pred = churn_model.predict(X_test)
 print("auc score:", roc_auc_score(y_test, y_pred))
 
-# check accuracy
-y_pred = churn_model.predict(X_test)
-y_pred = np.round(y_pred)
-print("accuracy_score", accuracy_score(y_test, y_pred))
+# %%
+print("Unique values in y_test:", np.unique(y_test))
+print("Unique values in y_pred:", np.unique(y_pred))
+
+# %%
+y_pred_binary = (y_pred >= 0.5).astype(int)
+print("accuracy_score", accuracy_score(y_test, y_pred_binary))
 
 # %% [markdown]
 # ### Final Thoughts
@@ -577,15 +585,13 @@ print("accuracy_score", accuracy_score(y_test, y_pred))
 churn_model.save("../models/churn_model.h5")
 
 # save the scaler
-import joblib
 joblib.dump(scaler, "../models/scaler.pkl")
 
 # save the encoder
 cols = [col for col in imp_cols if col not in num_cols] # get cols from imp_cols that are not in num_cols
-joblib.dump(pd.get_dummies(data[cols]), "../models/encoder.pkl")
-
-# %%
-cols = [col for col in imp_cols if col not in num_cols]
-cols
+print("cols:", cols)
+encoder = OneHotEncoder()
+encode = encoder.fit(data[cols])
+joblib.dump(encode, "../models/encoder.pkl")
 
 
