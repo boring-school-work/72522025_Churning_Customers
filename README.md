@@ -144,4 +144,4 @@ model.compile(loss='binary_crossentropy', optimizer=optimizer, metrics=['accurac
 
 ## Demo Video
 
-- YouTube link:
+- YouTube link: [https://youtu.be/zpMz7l91k_4](https://youtu.be/zpMz7l91k_4)
