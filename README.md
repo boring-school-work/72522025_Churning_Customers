@@ -55,13 +55,12 @@ predicting customers who are most likely subject to churn.
 - [x] Exploratory Data Analysis
 - [x] Model training (MLP using functional API)
 - [x] Model Evaluation
-- [ ] Deployment
+- [x] Deployment
 
 ## Directory Structure
 
 - **app:** Source code for model deployment.
 - **data:** Dataset
-- **demo**: Demo video.
 - **models:** Saved models.
 - **src:** Source codes for model training. (`.py` and `.ipynb` files)
 
@@ -76,9 +75,72 @@ predicting customers who are most likely subject to churn.
 
 ## Model Architecture
 
+**N.B.** Grid search and cross validation were used to find the best hyperparameters.
+
+### Initial Model
+
+Creating a deep neural network.
+
+```python
+input_layer = Input(shape=(X_train.shape[1],))
+dense_layer_1 = Dense(128, activation='relu')(input_layer)
+dense_layer_2 = Dense(64, activation='tanh')(dense_layer_1)
+dense_layer_3 = Dense(32, activation='elu')(dense_layer_2)
+dense_layer_4 = Dense(16, activation='relu')(dense_layer_3)
+dense_layer_5 = Dense(8, activation='tanh')(dense_layer_4)
+output_layer = Dense(1, activation='sigmoid')(dense_layer_5)
+
+# define the model with input layer and output layer
+model = Model(inputs=input_layer, outputs=output_layer)
+
+# compile the model
+model.compile(loss='binary_crossentropy', optimizer=optimizer, metrics=['accuracy'])
+```
+
+### Optimized Model
+
+One of the ways to solve the problem of overfitting is to use dropout layers. Dropout layers randomly drop some neurons during training.
+
+```python
+input_layer = Input(shape=(X_train.shape[1],))
+dense_layer_1 = Dense(128, activation='relu')(input_layer)
+dropout_layer_1 = Dropout(0.3)(dense_layer_1)
+dense_layer_2 = Dense(64, activation='tanh')(dropout_layer_1)
+dropout_layer_2 = Dropout(0.3)(dense_layer_2)
+dense_layer_3 = Dense(32, activation='elu')(dropout_layer_2)
+dense_layer_4 = Dense(16, activation='relu')(dense_layer_3)
+dropout_layer_3 = Dropout(0.3)(dense_layer_4)
+dense_layer_5 = Dense(8, activation='tanh')(dropout_layer_3)
+output_layer = Dense(1, activation='sigmoid')(dense_layer_5)
+
+# define the model with input layer and output layer
+model = Model(inputs=input_layer, outputs=output_layer)
+
+# compile the model
+model.compile(loss='binary_crossentropy', optimizer=optimizer, metrics=['accuracy'])
+```
+
+### Final Model
+
+Another way to reduce overfitting is reducing the number of neurons and hidden layers.
+
+```python
+input_layer = Input(shape=(X_train.shape[1],))
+dense_layer_1 = Dense(32, activation='relu')(input_layer)
+dense_layer_2 = Dense(16, activation='relu')(dense_layer_1)
+dense_layer_3 = Dense(8, activation='relu')(dense_layer_2)
+output_layer = Dense(1, activation='sigmoid')(dense_layer_3)
+
+# define the model with input layer and output layer
+model = Model(inputs=input_layer, outputs=output_layer)
+
+# compile the model
+model.compile(loss='binary_crossentropy', optimizer=optimizer, metrics=['accuracy'])
+```
+
 ## Deployment
 
-- Website link:
+- Website link: [https://72522025-churningcustomers.streamlit.app](https://72522025-churningcustomers.streamlit.app/)
 
 ## Demo Video
 
